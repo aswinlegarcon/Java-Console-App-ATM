@@ -1,8 +1,8 @@
 package ATM.Notes;
 
-public class Notes {
+public class Notes implements Cloneable {
     private String note;
-    private int count;
+    private long count;
 
 
     public void setNote(String note)
@@ -15,15 +15,19 @@ public class Notes {
         return this.note;
     }
 
-    public void setCount(int count)
+    public void setCount(long count)
     {
         this.count = count;
     }
 
-    public int getCount()
+    public long getCount()
     {
         return this.count;
     }
 
-
+    @Override
+    public Notes clone() throws CloneNotSupportedException
+    {
+        return (Notes) super.clone();
+    }
 }

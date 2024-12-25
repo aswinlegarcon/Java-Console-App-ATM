@@ -5,30 +5,35 @@ import java.util.ArrayList;
 public class Admin {
 
 
-    private static ArrayList<String> atmTransactionHistory = new ArrayList<>();
+    private ArrayList<String> atmTransactionHistory = new ArrayList<>();
     //        private static ArrayList<ATMMachine> atmMachines = new ArrayList<>();    for future usage when creating ATM objects
-    private static String adminName = "admin";
-    private static String password = "admin@123";
+    private  String adminName = "admin";
+    private  String password = "admin@123";
 
+    public Admin(String adminName,String password)
+    {
+        this.adminName = adminName;
+        this.password = password;
+    }
     // for admins
-    public static String getAdminName()
+    public  String getAdminName()
     {
         return adminName;
     }
 
-    public static String getPassword()
+    public  String getPassword()
     {
         return password;
     }
 
-    public static void addATMTransactionHistory(String transaction)
+    public void addATMTransactionHistory(String transaction)
     {
-        Admin.atmTransactionHistory.add(transaction);
+        this.atmTransactionHistory.add(transaction);
     }
 
-    public static ArrayList<String> getATMTransactionHistory()
+    public  ArrayList<String> getATMTransactionHistory()
     {
-        return Admin.atmTransactionHistory;
+        return this.atmTransactionHistory;
     }
 
 }

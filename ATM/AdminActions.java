@@ -11,6 +11,7 @@ public class AdminActions
     //        for users by admins
 
 
+
     public static void addUser(String name , double balance)
     {
         ATMMachine.getAvailableUsers().add(new User(name,111111,balance)); //always default pin is 111111
@@ -18,9 +19,11 @@ public class AdminActions
 
     public static void addUser(Scanner s)
     {
-        System.out.print("Enter the User's Name to Add :");
+        System.out.print("Enter the User's Name to Add : ");
         String userName = s.nextLine();
-        ATMMachine.getAvailableUsers().add(new User(userName,111111,1000));
+        System.out.print("Enter the Password of User : ");
+        int pin = Integer.parseInt(s.nextLine());
+        ATMMachine.getAvailableUsers().add(new User(userName, pin,1000));
         System.out.println("User Added Successfully..");
 
     }
@@ -44,7 +47,7 @@ public class AdminActions
         }
     }
 
-    public static void depositMoney(Scanner s)
+    public static void depositMoney(Scanner s, Admin currentAdmin)
     {
         System.out.println("Enter the no of amount of notes to deposit in ATM :");
         System.out.print("Enter the no of 2000 notes : ");
@@ -56,8 +59,8 @@ public class AdminActions
         System.out.print("Enter the no of 100 notes : ");
         int oneHundredNotes = Integer.parseInt(s.nextLine());
         ATMMachine.setBalance(twoThousandNotes,fiveHundredNotes,twoHundredNotes,oneHundredNotes);
-        long depositedBalance = ATMMachine.getDepositedBalance(twoThousandNotes,fiveHundredNotes,twoHundredNotes,oneHundredNotes);
-        Admin.addATMTransactionHistory("Admin has deposited Rs." + depositedBalance + " --- ATM Balance : " + ATMMachine.getBalance());
+        long depositedBalance = AtmActions.getDepositedBalance(twoThousandNotes,fiveHundredNotes,twoHundredNotes,oneHundredNotes);
+        currentAdmin.addATMTransactionHistory("Admin has deposited Rs." + depositedBalance + " --- ATM Balance : " + ATMMachine.getBalance());
         System.out.println("The amount of Rs." + depositedBalance + " is added successfully");
         System.out.println("Notes in ATM are as follows..");
         ArrayList<Notes> notesInAtm = ATMMachine.getNotesInAtm();
@@ -68,9 +71,9 @@ public class AdminActions
         System.out.println("\nThe current balance in ATM is " + ATMMachine.getBalance());
     }
 
-    public static void viewTransactions()
+    public static void viewTransactions(Admin currentAdmin)
     {
-        ArrayList<String> atmHistory = Admin.getATMTransactionHistory();
+        ArrayList<String> atmHistory = currentAdmin.getATMTransactionHistory();
         if (!atmHistory.isEmpty()) {
             System.out.println("Transactions made by Users...\n");
             for (String history : atmHistory) {
