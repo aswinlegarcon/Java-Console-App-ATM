@@ -43,7 +43,6 @@ public class AtmActions {
 
                 if (AtmActions.checkUser(userName, pinNo)) {
                     User currentUser = AtmActions.getUser(userName);
-                    Admin currentAdmin = AtmActions.getAdmin("admin");
                     System.out.println("User Login Success..");
                     while (true) {
                         System.out.println("Enter the Operation to do..");
@@ -59,13 +58,13 @@ public class AtmActions {
                         }
                         else if (operationChoice == 3)
                         {
-                            UserActions.withdrawCash(s,currentUser,currentAdmin);
+                            UserActions.withdrawCash(s,currentUser);
 
                         }
                         else if (operationChoice == 4)
                         {
 
-                            UserActions.depositCash(s,currentUser,currentAdmin);
+                            UserActions.depositCash(s,currentUser);
                         }
                         else if (operationChoice == 5)
                         {
@@ -129,7 +128,7 @@ public class AtmActions {
                     else if (operationChoice == 4)
                     {
 
-                        AdminActions.viewTransactions(currentAdmin);
+                        AdminActions.viewTransactions(s,currentAdmin);
                     }
 
 //                            more options need to be added here
@@ -202,11 +201,6 @@ public class AtmActions {
     }
     public static double getBalance(ArrayList<Notes> notesInAtm,int twoThousand,int fiveHundred, int twoHundred, int oneHundred)
     {
-
-        notesInAtm.add(0,new TwoThousand("2000",twoThousand));
-        notesInAtm.add(1,new FiveHundred("500",fiveHundred));
-        notesInAtm.add(2,new TwoHundred("200",twoHundred));
-        notesInAtm.add(3,new OneHundred("100",oneHundred));
         double balance = ATMMachine.getBalance();
         for(Notes notes:notesInAtm)
         {
@@ -217,18 +211,22 @@ public class AtmActions {
 
             if(notes.getNote().equals("2000"))
             {
+                notes.setCount(notes.getCount()+twoThousand);
                 twoThousands = 2000 * notes.getCount();
             }
             else if(notes.getNote().equals("500"))
             {
+                notes.setCount(notes.getCount()+fiveHundred);
                 fiveHundreds = 500 * notes.getCount();
             }
             else if(notes.getNote().equals("200"))
             {
+                notes.setCount(notes.getCount()+twoHundred);
                 twoHundreds = 200 * notes.getCount();
             }
             else if(notes.getNote().equals("100"))
             {
+                notes.setCount(notes.getCount()+oneHundred);
                 oneHundreds = 100 * notes.getCount();
             }
 
@@ -243,4 +241,3 @@ public class AtmActions {
     }
 
 }
-

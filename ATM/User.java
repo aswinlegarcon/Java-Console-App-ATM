@@ -6,7 +6,6 @@ public class User {
     private String userName;
     private int pin;
     private double accBalance;
-    private ArrayList<String> userHistory = new ArrayList<String>();
 
 
     public User(String userName, int pin, double accBalance)
@@ -40,14 +39,10 @@ public class User {
     {
         this.accBalance = balance;
     }
-    public void addUserTransactionHistory(String transaction)
+    @Override
+    public String toString()
     {
-        this.userHistory.add(transaction);
-    }
-
-    public ArrayList<String> getUserTransactionHistory()
-    {
-        return this.userHistory;
+        return this.userName;
     }
 
 }

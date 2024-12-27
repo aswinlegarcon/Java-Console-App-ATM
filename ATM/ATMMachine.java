@@ -16,9 +16,13 @@ import java.util.Scanner;
 public class ATMMachine {
     private static ArrayList<User> users = new ArrayList<>();
     private static ArrayList<Admin> admins = new ArrayList<>();
-    private static ArrayList<Notes> notesInAtm = new ArrayList<Notes>(); //(Arrays.asList(new TwoThousand("2000", 0), new FiveHundred("500", 0), new TwoHundred("200", 0),new OneHundred("100", 0)));
+    private static ArrayList<Transactions> transactions = new ArrayList<>();
+    private static ArrayList<Notes> notesInAtm = new ArrayList<Notes>(Arrays.asList(new TwoThousand("2000", 0), new FiveHundred("500", 0), new TwoHundred("200", 0),new OneHundred("100", 0)));
     private static double balance;
 
+    public static ArrayList<Transactions> getAvailableTransactions() {
+        return ATMMachine.transactions;
+    }
     public static ArrayList<User> getAvailableUsers() {
         return ATMMachine.users;
     }

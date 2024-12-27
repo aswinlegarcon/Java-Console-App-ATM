@@ -5,10 +5,9 @@ import java.util.ArrayList;
 public class Admin {
 
 
-    private ArrayList<String> atmTransactionHistory = new ArrayList<>();
     //        private static ArrayList<ATMMachine> atmMachines = new ArrayList<>();    for future usage when creating ATM objects
-    private  String adminName = "admin";
-    private  String password = "admin@123";
+    private  String adminName;
+    private  String password;
 
     public Admin(String adminName,String password)
     {
@@ -26,14 +25,11 @@ public class Admin {
         return password;
     }
 
-    public void addATMTransactionHistory(String transaction)
-    {
-        this.atmTransactionHistory.add(transaction);
-    }
 
-    public  ArrayList<String> getATMTransactionHistory()
+    @Override
+    public String toString()
     {
-        return this.atmTransactionHistory;
+        return this.adminName;
     }
 
 }

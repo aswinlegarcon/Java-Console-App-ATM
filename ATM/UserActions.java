@@ -21,7 +21,7 @@ public class UserActions
 
     private static double performWithdraw(double useramount, Notes note, ArrayList<String> denominationsList) {
         long count = (long) (useramount/Integer.parseInt(note.getNote()));
-        if(Long.parseLong(note.getNote()) < useramount && count <= note.getCount()) {
+        if(Long.parseLong(note.getNote()) <= useramount && count <= note.getCount()) {
             useramount = useramount - (count * Integer.parseInt(note.getNote()));
             note.setCount((note.getCount() - count));
             denominationsList.add("You got " + note.getNote() + " count " + count);
@@ -179,34 +179,40 @@ public class UserActions
 //                            }
 //                        }
 
-    public static void withdrawCash (Scanner s, User currentUser, Admin currentAdmin) throws CloneNotSupportedException {
+    public static void withdrawCash (Scanner s, User currentUser) throws CloneNotSupportedException {
         ArrayList<String> notesTransaction = new ArrayList<>();
         ArrayList<Notes> notesDuplicate = new ArrayList<>();
 
         System.out.print("Enter the amount to withdraw :");
         long amountToWithdraw = Long.parseLong(s.nextLine());
+        long finalAmountForCalculations = amountToWithdraw;
         for(Notes notesInAtm:ATMMachine.getNotesInAtm())
         {
             notesDuplicate.add(notesInAtm.clone());
         }
         while (amountToWithdraw!=0)
         {
-            for(Notes notesInDuplicate:notesDuplicate)
-            {
+            for(Notes notesInDuplicate:notesDuplicate) {
                 String noteType = notesInDuplicate.getNote();
-                switch (noteType)
-                {
-                    case "2000","500","200","100":
-                        amountToWithdraw = (long) UserActions.performWithdraw(amountToWithdraw,notesInDuplicate,notesTransaction);
+                switch (noteType) {
+                    case "2000", "500", "200", "100":
+                        amountToWithdraw = (long) UserActions.performWithdraw(amountToWithdraw, notesInDuplicate, notesTransaction);
                         break;
                 }
+            }
                 if(amountToWithdraw == 0)
                 {
                     ATMMachine.setNotesInAtm(notesDuplicate);
+                    currentUser.setBalance(currentUser.getBalance()-finalAmountForCalculations);
                     for(String notesGiven: notesTransaction)
                     {
                         System.out.println("*"+notesGiven);
                     }
+                    for(Notes notes:ATMMachine.getNotesInAtm())
+                    {
+                        System.out.println("Note: "+ notes.getNote()+" Count : "+notes.getCount() );
+                    }
+                    ATMMachine.getAvailableTransactions().add(new Transactions("Withdrawed",finalAmountForCalculations,currentUser));
                     break;
                 }
                 else
@@ -214,14 +220,14 @@ public class UserActions
                     System.out.println("There are no denominations...Enter another amount");
                     break;
                 }
+
             }
         }
 
 
-        }
 
 
-    public static void depositCash(Scanner s,User currentUser, Admin currentAdmin)
+    public static void depositCash(Scanner s,User currentUser)
     {
         System.out.print("Enter the Amount :");
         long firstAmountToDeposit = Long.parseLong(s.nextLine());
@@ -256,15 +262,21 @@ public class UserActions
                         note.setCount(note.getCount()+oneHundredNotes);
                         break;
                 }
+
+            }
+            ATMMachine.setNotesInAtm(notesToAdded);
+            ATMMachine.getAvailableTransactions().add(new Transactions("Deposited",amountToDeposit,currentUser));
+            for(Notes notes:ATMMachine.getNotesInAtm())
+            {
+                System.out.println("Note: "+ notes.getNote()+" Count : "+notes.getCount());
             }
             double currentBalance = currentUser.getBalance() + amountToDeposit;
             double balanceInAtm = ATMMachine.getBalance() + amountToDeposit;
             currentUser.setBalance(currentBalance);
             ATMMachine.setBalance(balanceInAtm);
-            currentUser.addUserTransactionHistory("Your account is credited with Rs." + amountToDeposit + "--- Balance :" + currentUser.getBalance());
-            currentAdmin.addATMTransactionHistory(currentUser.getUserName() + "'s account is credited with Rs." + amountToDeposit + "--- User Balance : " + currentUser.getBalance() + "--- ATM Balance : " + ATMMachine.getBalance());
             System.out.println("The deposit of Rs." + amountToDeposit + " is added successfully");
             System.out.println("Your current balance is " + currentUser.getBalance());
+            System.out.println("ATM balance "+ ATMMachine.getBalance());
         }
         else
         {
@@ -275,11 +287,15 @@ public class UserActions
 
     public static void viewTransactions(User currentUser)
     {
-        ArrayList<String> userHistory = currentUser.getUserTransactionHistory();
+        ArrayList<Transactions> userHistory = ATMMachine.getAvailableTransactions();
         if (!userHistory.isEmpty()) {
             System.out.println("The Transactions you have made...\n");
-            for (String history : userHistory) {
-                System.out.println(history);
+            for (Transactions history : userHistory) {
+                if(currentUser.getUserName().equals(history.getUser()))
+                {
+                    System.out.println("You "+ history.getType() + " Rs "+history.getAmount());
+                }
+
             }
         } else {
             System.out.println("There are no Transactions..");
