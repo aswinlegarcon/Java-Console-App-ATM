@@ -9,7 +9,7 @@ public class AtmActions {
 
     public static void startAtm(ArrayList<Admin> admins) throws CloneNotSupportedException {
         Scanner s = new Scanner(System.in);
-        admins.add(new Admin("admin", "admin@123"));
+        admins.add(new Admin("admin", "123"));
         while (true) {
             System.out.println("Enter Your Role : \n 1. Admin \n 2. User \n 3. Exit");
             int roleChoice = Integer.parseInt(s.nextLine());

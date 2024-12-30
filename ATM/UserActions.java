@@ -200,29 +200,29 @@ public class UserActions
                         break;
                 }
             }
-                if(amountToWithdraw == 0)
+            if(amountToWithdraw == 0)
+            {
+                ATMMachine.setNotesInAtm(notesDuplicate);
+                currentUser.setBalance(currentUser.getBalance()-finalAmountForCalculations);
+                for(String notesGiven: notesTransaction)
                 {
-                    ATMMachine.setNotesInAtm(notesDuplicate);
-                    currentUser.setBalance(currentUser.getBalance()-finalAmountForCalculations);
-                    for(String notesGiven: notesTransaction)
-                    {
-                        System.out.println("*"+notesGiven);
-                    }
-                    for(Notes notes:ATMMachine.getNotesInAtm())
-                    {
-                        System.out.println("Note: "+ notes.getNote()+" Count : "+notes.getCount() );
-                    }
-                    ATMMachine.getAvailableTransactions().add(new Transactions("Withdrawed",finalAmountForCalculations,currentUser));
-                    break;
+                    System.out.println("*"+notesGiven);
                 }
-                else
+                for(Notes notes:ATMMachine.getNotesInAtm())
                 {
-                    System.out.println("There are no denominations...Enter another amount");
-                    break;
+                    System.out.println("Note: "+ notes.getNote()+" Count : "+notes.getCount() );
                 }
-
+                ATMMachine.getAvailableTransactions().add(new Transactions("Withdrawed",finalAmountForCalculations,currentUser));
+                break;
             }
+            else
+            {
+                System.out.println("There are no denominations...Enter another amount");
+                break;
+            }
+
         }
+    }
 
 
 

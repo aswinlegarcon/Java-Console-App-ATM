@@ -52,7 +52,7 @@ public class AdminActions {
         System.out.print("Enter the no of 100 notes : ");
         int oneHundredNotes = Integer.parseInt(s.nextLine());
         ATMMachine.setBalance(twoThousandNotes, fiveHundredNotes, twoHundredNotes, oneHundredNotes);
-        long depositedBalance = AtmActions.getDepositedBalance(twoThousandNotes, fiveHundredNotes, twoHundredNotes, oneHundredNotes);
+        long depositedBalance = ATM.AtmActions.getDepositedBalance(twoThousandNotes, fiveHundredNotes, twoHundredNotes, oneHundredNotes);
         ATMMachine.getAvailableTransactions().add(new Transactions("Deposited", depositedBalance, currentAdmin));
         System.out.println("The amount of Rs." + depositedBalance + " is added successfully");
         System.out.println("Notes in ATM are as follows..");
