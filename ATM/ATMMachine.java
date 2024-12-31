@@ -10,6 +10,7 @@ import ATM.Notes.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 
 public class ATMMachine {
@@ -39,7 +40,7 @@ public class ATMMachine {
     }
 
     public static void setBalance(int twoThousand, int fiveHundred, int twoHundred, int oneHundred) {
-        ATMMachine.balance = ATM.AtmActions.getBalance(notesInAtm, twoThousand, fiveHundred, twoHundred, oneHundred);
+        ATMMachine.balance = AtmActions.getBalance(notesInAtm, twoThousand, fiveHundred, twoHundred, oneHundred);
     }
 
     public static void setBalance(double balance) {

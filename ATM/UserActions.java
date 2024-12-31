@@ -7,9 +7,27 @@ import java.util.Scanner;
 
 public class UserActions
 {
-
-
-
+    public static User checkUser()
+    {
+        Scanner s = new Scanner(System.in);
+        System.out.print("Enter the User name: ");
+        String uname = s.nextLine();
+        System.out.print("Enter the Pin : ");
+        int pin = Integer.parseInt(s.nextLine());
+        ArrayList<User> usersAvailable = ATMMachine.getAvailableUsers();
+        for(User individualUser:usersAvailable)
+        {
+            if (individualUser.getUserName().equals(uname) && individualUser.getPin() == pin)
+            {
+                return individualUser;
+            }
+            else if(individualUser.getUserName().equals(uname) && individualUser.getPin() != pin)
+            {
+                return new User(null,0,0);
+            }
+        }
+        return null;
+    }
 
     public static void changePin(Scanner s,User currentUser)
     {
@@ -21,163 +39,25 @@ public class UserActions
 
     private static double performWithdraw(double useramount, Notes note, ArrayList<String> denominationsList) {
         long count = (long) (useramount/Integer.parseInt(note.getNote()));
-        if(Long.parseLong(note.getNote()) <= useramount && count <= note.getCount()) {
-            useramount = useramount - (count * Integer.parseInt(note.getNote()));
-            note.setCount((note.getCount() - count));
-            denominationsList.add("You got " + note.getNote() + " count " + count);
+        if(Long.parseLong(note.getNote()) <= useramount && 0 < note.getCount())
+        {
+            if(count <= note.getCount())
+            {
+                useramount = useramount - (count * Integer.parseInt(note.getNote()));
+                note.setCount((note.getCount() - count));
+                denominationsList.add("You got " + note.getNote() + " count " + count);
+            }
+            else
+            {
+                useramount = useramount - (note.getCount() * Integer.parseInt(note.getNote()));
+                denominationsList.add("You got " + note.getNote() + " count " + note.getCount());
+                note.setCount((0));
+            }
+
             return useramount;
         }
         return useramount;
     }
-
-//    public static void withdrawCash(Scanner s , User currentUser, Admin currentAdmin)
-//    {
-//        ArrayList<Notes> notesToAdded = ATMMachine.getNotesInAtm();
-//        System.out.println("Current notes in ATM...");
-//        for (Notes notes:notesToAdded)
-//        {
-//            System.out.print(notes.getNote()+" - "+notes.getCount()+"---");
-//        }
-//        System.out.println("Enter the amount to withdraw : ");
-//        long amountToWithdraw = Long.parseLong(s.nextLine());
-//
-//        long currentTwoThousand = 0;
-//        long currentFiveHundred = 0;
-//        long currentTwoHundred = 0;
-//        long currentOneHundred = 0;
-//        for(Notes notes:notesToAdded)
-//        {
-//            if(notes.getNote().equals("2000"))
-//            {
-//                currentTwoThousand = notes.getCount();
-//            }
-//            else if(notes.getNote().equals("500"))
-//            {
-//                currentFiveHundred = notes.getCount();
-//            }
-//            else if(notes.getNote().equals("200"))
-//            {
-//                currentTwoHundred = notes.getCount();
-//            }
-//            else if(notes.getNote().equals("100"))
-//            {
-//                currentOneHundred = notes.getCount();
-//            }
-//        }
-//                           // ATMMachine.updateCash("Withdraw", notesToAdded, twoThousandNotes,fiveHundredNotes,twoHundredNotes,oneHundredNotes);
-//                            if (amountToWithdraw <= ATMMachine.getBalance())
-//                            {
-//                                if (amountToWithdraw <= currentUser.getBalance()) {
-//                                    double currentBalanceInAcc = currentUser.getBalance() - amountToWithdraw;
-//                                    double currentBalanceInATM = ATMMachine.getBalance() - amountToWithdraw;
-//
-//                                    long tempBalance = amountToWithdraw;
-//                                    while (tempBalance!=0)
-//                                    {
-//                                        if(tempBalance == 100)
-//                                        {
-//                                            currentOneHundred--;
-//                                            tempBalance-=100*currentOneHundred;
-//                                            System.out.println("You got 1 100 Note");
-//                                        }
-//                                        else if(tempBalance == 200)
-//                                        {
-//                                            currentTwoHundred--;
-//                                            System.out.println("You got 1 200 Note");
-//                                        }
-//                                        else if(tempBalance == 500)
-//                                        {
-//                                            currentFiveHundred--;
-//                                            System.out.println("You got 1 500 Note");
-//                                        }
-//                                        else if(tempBalance == 2000)
-//                                        {
-//                                            currentTwoThousand--;
-//                                            System.out.println("You got 1 2000 Note");
-//                                        }
-//                                        else if(tempBalance>100)
-//                                        {
-//                                            while (true)
-//                                            {
-//                                                if(tempBalance>2000)
-//                                                {
-//                                                    long twoThousandNotes = tempBalance/2000;
-//                                                    if(currentTwoThousand>=twoThousandNotes)
-//                                                    {
-//                                                        tempBalance = tempBalance - (2000*twoThousandNotes);
-//                                                        currentTwoThousand -= twoThousandNotes;
-//                                                        System.out.println("You got "+twoThousandNotes+" 2000 s");
-//                                                        break;
-//                                                    }
-//                                                }
-//                                                else if(tempBalance>500)
-//                                                {
-//                                                    long fiveHundredNotes = tempBalance/500;
-//                                                    if(currentFiveHundred>=fiveHundredNotes)
-//                                                    {
-//                                                        tempBalance = tempBalance - (500*fiveHundredNotes);
-//                                                        currentFiveHundred -= fiveHundredNotes;
-//                                                        System.out.println("You got "+fiveHundredNotes+" 500 s");
-//                                                        break;
-//                                                    }
-//                                                }
-//                                                else if(tempBalance>200)
-//                                                {
-//                                                    long twoHundredNotes = tempBalance/200;
-//                                                    if(currentTwoHundred>=twoHundredNotes)
-//                                                    {
-//                                                        tempBalance = tempBalance - (200*twoHundredNotes);
-//                                                        currentTwoHundred -= twoHundredNotes;
-//                                                        System.out.println("You got "+twoHundredNotes+" 200 s");
-//                                                        break;
-//                                                    }
-//                                                }
-//                                                else
-//                                                    System.out.println("Denomination not available");
-//                                            }
-//
-//                                        }
-//                                        for(Notes notes:notesToAdded)
-//                                        {
-//                                            if(notes.getNote().equals("2000"))
-//                                            {
-//                                                notes.setCount(currentTwoThousand);
-//                                            }
-//                                            else if(notes.getNote().equals("500"))
-//                                            {
-//                                                notes.setCount(currentFiveHundred);
-//                                            }
-//                                            else if(notes.getNote().equals("200"))
-//                                            {
-//                                                notes.setCount(currentTwoHundred);
-//                                            }
-//                                            else if(notes.getNote().equals("100"))
-//                                            {
-//                                                notes.setCount(currentOneHundred);
-//                                            }
-//                                        }
-//
-//                                    }
-//
-//                                    System.out.println("Withdrawl amount of Rs." + amountToWithdraw + " is successful");
-//                                    System.out.println("Now notes in ATM are as follow");
-//                                    for (Notes notes:notesToAdded)
-//                                    {
-//                                        System.out.print(notes.getNote()+" - "+notes.getCount()+"---");
-//                                    }
-//                                    currentUser.setBalance(currentBalanceInAcc);
-//                                    ATMMachine.setBalance(currentBalanceInATM);
-//                                    currentUser.addUserTransactionHistory("Your account is debited with Rs." + amountToWithdraw + "--- Balance :" + currentUser.getBalance());
-//                                    currentAdmin.addATMTransactionHistory(currentUser.getUserName() + "'s account is debited with Rs." + amountToWithdraw + "--- User Balance : " + currentUser.getBalance() + "--- ATM Balance : " + ATMMachine.getBalance());
-//                                    System.out.println("Your current balance is " + currentUser.getBalance());
-//                                } else {
-//                                    System.out.println("The amount in your account is not sufficent to withdraw");
-//                                }
-//                            } else {
-//                                System.out.println("Sorryy....There is no amount in the ATM. Come back Later");
-//
-//                            }
-//                        }
 
     public static void withdrawCash (Scanner s, User currentUser) throws CloneNotSupportedException {
         ArrayList<String> notesTransaction = new ArrayList<>();
@@ -185,44 +65,53 @@ public class UserActions
 
         System.out.print("Enter the amount to withdraw :");
         long amountToWithdraw = Long.parseLong(s.nextLine());
-        long finalAmountForCalculations = amountToWithdraw;
-        for(Notes notesInAtm:ATMMachine.getNotesInAtm())
+        if(amountToWithdraw<=currentUser.getBalance())
         {
-            notesDuplicate.add(notesInAtm.clone());
-        }
-        while (amountToWithdraw!=0)
-        {
-            for(Notes notesInDuplicate:notesDuplicate) {
-                String noteType = notesInDuplicate.getNote();
-                switch (noteType) {
-                    case "2000", "500", "200", "100":
-                        amountToWithdraw = (long) UserActions.performWithdraw(amountToWithdraw, notesInDuplicate, notesTransaction);
+            if(amountToWithdraw<=ATMMachine.getBalance())
+            {
+                long finalAmountForCalculations = amountToWithdraw;
+                for(Notes notesInAtm:ATMMachine.getNotesInAtm())
+                {
+                    notesDuplicate.add(notesInAtm.clone());
+                }
+                while (amountToWithdraw!=0)
+                {
+                    for(Notes notesInDuplicate:notesDuplicate) {
+                        String noteType = notesInDuplicate.getNote();
+                        switch (noteType) {
+                            case "2000", "500", "200", "100":
+                                amountToWithdraw = (long) UserActions.performWithdraw(amountToWithdraw, notesInDuplicate, notesTransaction);
+                                break;
+                        }
+                    }
+                    if(amountToWithdraw == 0)
+                    {
+                        ATMMachine.setNotesInAtm(notesDuplicate);
+                        currentUser.setBalance(currentUser.getBalance()-finalAmountForCalculations);
+                        for(String notesGiven: notesTransaction)
+                        {
+                            System.out.println("*"+notesGiven);
+                        }
+                        for(Notes notes:ATMMachine.getNotesInAtm())
+                        {
+                            System.out.println("Note: "+ notes.getNote()+" Count : "+notes.getCount() );
+                        }
+                        ATMMachine.getAvailableTransactions().add(new Transactions("Withdrawed",finalAmountForCalculations,currentUser));
                         break;
-                }
-            }
-            if(amountToWithdraw == 0)
-            {
-                ATMMachine.setNotesInAtm(notesDuplicate);
-                currentUser.setBalance(currentUser.getBalance()-finalAmountForCalculations);
-                for(String notesGiven: notesTransaction)
-                {
-                    System.out.println("*"+notesGiven);
-                }
-                for(Notes notes:ATMMachine.getNotesInAtm())
-                {
-                    System.out.println("Note: "+ notes.getNote()+" Count : "+notes.getCount() );
-                }
-                ATMMachine.getAvailableTransactions().add(new Transactions("Withdrawed",finalAmountForCalculations,currentUser));
-                break;
-            }
-            else
-            {
-                System.out.println("There are no denominations...Enter another amount");
-                break;
-            }
+                    }
+                    else
+                    {
+                        System.out.println("There are no denominations...Enter another amount");
+                        break;
+                    }
 
+                }
+            }
+            System.out.println("Insufficient amount in ATM ....");
+            return;
         }
-    }
+        System.out.println("Insufficient amount in your Account ...");
+        }
 
 
 

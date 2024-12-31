@@ -9,21 +9,50 @@ public class AtmActions {
 
     public static void startAtm(ArrayList<Admin> admins) throws CloneNotSupportedException {
         Scanner s = new Scanner(System.in);
-        admins.add(new Admin("admin", "123"));
+        admins.add(new Admin("admin", "admin"));
         while (true) {
             System.out.println("Enter Your Role : \n 1. Admin \n 2. User \n 3. Exit");
             int roleChoice = Integer.parseInt(s.nextLine());
 //            for choice 1
             if (roleChoice == 1) {
-                AtmActions.adminEntry();
+                Admin currentAdmin = AdminActions.checkAdmin();
+                if(currentAdmin==null)
+                {
+                    System.out.println("No users found..");
+                }
+                else if(currentAdmin.getAdminName()==null)
+                {
+                    System.out.println("Invalid credentials...");
+                }
+                else
+                {
+                    AtmActions.adminEntry(currentAdmin);
+                }
+
             }
 //            for choice 2
-            else if (roleChoice == 2) {
-                AtmActions.userEntry();
-
-            } else if (roleChoice == 3) {
+            else if (roleChoice == 2)
+            {
+                User currentUser = UserActions.checkUser();
+                if(currentUser==null)
+                {
+                    System.out.println("No admins found..");
+                }
+                else if(currentUser.getUserName()==null)
+                {
+                    System.out.println("Invalid credentials...");
+                }
+                else
+                {
+                    AtmActions.userEntry(currentUser);
+                }
+            }
+            else if (roleChoice == 3)
+            {
                 System.exit(1);
-            } else {
+            }
+            else
+            {
                 System.out.println("Enter correct option...");
             }
 
@@ -31,18 +60,9 @@ public class AtmActions {
     }
 
 
-    public static void userEntry() throws CloneNotSupportedException {
-        Scanner s = new Scanner(System.in);
-        if (!ATMMachine.getAvailableUsers().isEmpty()) {
-            userEnter:
-            while (true) {
-                System.out.print("Enter the User name: ");
-                String userName = s.nextLine();
-                System.out.print("Enter the Pin (default is 111111) : ");
-                int pinNo = Integer.parseInt(s.nextLine());
-
-                if (AtmActions.checkUser(userName, pinNo)) {
-                    User currentUser = AtmActions.getUser(userName);
+    public static void userEntry(User currentUser) throws CloneNotSupportedException
+    {
+                    Scanner s = new Scanner(System.in);
                     System.out.println("User Login Success..");
                     while (true) {
                         System.out.println("Enter the Operation to do..");
@@ -59,11 +79,9 @@ public class AtmActions {
                         else if (operationChoice == 3)
                         {
                             UserActions.withdrawCash(s,currentUser);
-
                         }
                         else if (operationChoice == 4)
                         {
-
                             UserActions.depositCash(s,currentUser);
                         }
                         else if (operationChoice == 5)
@@ -73,7 +91,7 @@ public class AtmActions {
                         else if (operationChoice == 6)
                         {
                             System.out.println("Exittingg...");
-                            break userEnter;
+                            return;
                         }
 //                        more operations need to be added here
                         else
@@ -83,59 +101,38 @@ public class AtmActions {
 
                     }
                 }
-                else
-                {
-                    System.out.println("The entered credentials are wrong...Try Again");
-                }
-            }
-        }
-        else
-        {
-            System.out.println("No User found...Try contacting the Admin");
-        }
-    }
 
-    public static void adminEntry() {
-        adminPassEnter:
-        while (true) {
-            Scanner s = new Scanner(System.in);
-            System.out.print("Enter the Admin name: ");
-            String adminName = s.nextLine();
-            System.out.print("Enter the Password: ");
-            String password = s.nextLine();
-            if (AtmActions.checkAdmin(adminName, password)) {
-                Admin currentAdmin = AtmActions.getAdmin(adminName);
 
+    public static void adminEntry(Admin currentAdmin) {
+                Scanner s = new Scanner(System.in);
                 System.out.println("Access Granted");
-                while (true) {
+                while (true)
+                {
                     System.out.println("Enter the operation to do... \n 1. Add User \n 2. Delete User \n 3. Deposit Cash in ATM \n 4. Show All Transaction History\n 5. Logout");
                     int operationChoice = Integer.parseInt(s.nextLine());
                     if (operationChoice == 1)
                     {
-                        AdminActions.addUser(s);
+                        AdminActions.addUser();
                     }
                     else if (operationChoice == 2)
                     {
-                        AdminActions.deleteUser(s);
+                        AdminActions.deleteUser();
                     }
                     else if (operationChoice == 3)
                     {
-//                                need to add more here in future(for now this is it)
-                        AdminActions.depositMoney(s,currentAdmin);
+                        AdminActions.depositMoney(currentAdmin);
                     }
 
                     // view all transactions must be added here
                     else if (operationChoice == 4)
                     {
 
-                        AdminActions.viewTransactions(s,currentAdmin);
+                        AdminActions.viewTransactions(currentAdmin);
                     }
-
-//                            more options need to be added here
                     else if (operationChoice == 5)
                     {
                         System.out.println("Exitting....");
-                        break adminPassEnter;
+                        return;
                     }
                     else
                     {
@@ -143,62 +140,11 @@ public class AtmActions {
                     }
                 }
             }
-            else
-            {
-                System.out.println("The entered credentials are wrong..\n Enter again.");
-            }
-        }
 
-    }
-    public static boolean checkUser(String uname, int pin)
-    {
-        ArrayList<User> usersAvailable = ATMMachine.getAvailableUsers();
-        for(User individualUser:usersAvailable)
-        {
-            if (individualUser.getUserName().equals(uname) && individualUser.getPin() == pin)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-    public static boolean checkAdmin(String name, String pass)
-    {
-        ArrayList<Admin> adminsAvailable = ATMMachine.getAvailableAdmins();
-        for(Admin individualAdmin:adminsAvailable)
-        {
-            if (individualAdmin.getAdminName().equals(name) && individualAdmin.getPassword().equals(pass))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
 
-    public static User getUser(String uname)
-    {
-        ArrayList<User> usersAvailable =ATMMachine.getAvailableUsers();
-        for(User individualUser:usersAvailable)
-        {
-            if (individualUser.getUserName().equals(uname))
-            {
-                return individualUser;
-            }
-        }
-        return null;
-    }
-    public static Admin getAdmin(String uname)
-    {
-        ArrayList<Admin> adminsAvailable =ATMMachine.getAvailableAdmins();
-        for(Admin individualAdmin:adminsAvailable)
-        {
-            if (individualAdmin.getAdminName().equals(uname))
-            {
-                return individualAdmin;
-            }
-        }
-        return null;
-    }
+
+
+
     public static double getBalance(ArrayList<Notes> notesInAtm,int twoThousand,int fiveHundred, int twoHundred, int oneHundred)
     {
         double balance = ATMMachine.getBalance();
@@ -234,6 +180,7 @@ public class AtmActions {
         }
         return balance;
     }
+
     public static long getDepositedBalance(int twoThousand,int fiveHundred, int twoHundred, int oneHundred)
     {
         long balance = 2000*twoThousand + 500*fiveHundred + 200*twoHundred + 100*oneHundred;

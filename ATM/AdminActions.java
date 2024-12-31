@@ -9,21 +9,41 @@ public class AdminActions {
 
     //        for users by admins
 
-
-    public static void addUser(String name, double balance) {
-        ATMMachine.getAvailableUsers().add(new User(name, 111111, balance)); //always default pin is 111111
+    public static Admin checkAdmin()
+    {
+        Scanner s = new Scanner(System.in);
+        System.out.print("Enter the Admin name: ");
+        String name = s.nextLine();
+        System.out.print("Enter the Password: ");
+        String pass = s.nextLine();
+        ArrayList<ATM.Admin> adminsAvailable = ATMMachine.getAvailableAdmins();
+        for(ATM.Admin individualAdmin:adminsAvailable)
+        {
+            if (individualAdmin.getAdminName().equals(name) && individualAdmin.getPassword().equals(pass))
+            {
+                return individualAdmin;
+            }
+            else if(individualAdmin.getAdminName().equals(name) && !individualAdmin.getPassword().equals(pass))
+            {
+                return new ATM.Admin(null,null);
+            }
+        }
+        return null;
     }
 
-    public static void addUser(Scanner s) {
+
+    public static void addUser() {
+        Scanner s = new Scanner(System.in);
         System.out.print("Enter the User's Name to Add : ");
         String userName = s.nextLine();
         System.out.print("Enter the Password of User : ");
         int pin = Integer.parseInt(s.nextLine());
-        ATMMachine.getAvailableUsers().add(new User(userName, pin, 1000));
+        ATMMachine.getAvailableUsers().add(new User(userName, pin, 0));
         System.out.println("User Added Successfully..");
     }
 
-    public static void deleteUser(Scanner s) {
+    public static void deleteUser() {
+        Scanner s = new Scanner(System.in);
         ArrayList<User> usersToRemove = ATMMachine.getAvailableUsers();
         if (!usersToRemove.isEmpty()) {
             System.out.println("The Available Users are...");
@@ -41,7 +61,8 @@ public class AdminActions {
         }
     }
 
-    public static void depositMoney(Scanner s, Admin currentAdmin) {
+    public static void depositMoney(Admin currentAdmin) {
+        Scanner s = new Scanner(System.in);
         System.out.println("Enter the no of amount of notes to deposit in ATM :");
         System.out.print("Enter the no of 2000 notes : ");
         int twoThousandNotes = Integer.parseInt(s.nextLine());
@@ -52,7 +73,7 @@ public class AdminActions {
         System.out.print("Enter the no of 100 notes : ");
         int oneHundredNotes = Integer.parseInt(s.nextLine());
         ATMMachine.setBalance(twoThousandNotes, fiveHundredNotes, twoHundredNotes, oneHundredNotes);
-        long depositedBalance = ATM.AtmActions.getDepositedBalance(twoThousandNotes, fiveHundredNotes, twoHundredNotes, oneHundredNotes);
+        long depositedBalance = AtmActions.getDepositedBalance(twoThousandNotes, fiveHundredNotes, twoHundredNotes, oneHundredNotes);
         ATMMachine.getAvailableTransactions().add(new Transactions("Deposited", depositedBalance, currentAdmin));
         System.out.println("The amount of Rs." + depositedBalance + " is added successfully");
         System.out.println("Notes in ATM are as follows..");
@@ -63,7 +84,8 @@ public class AdminActions {
         System.out.println("\nThe current balance in ATM is " + ATMMachine.getBalance());
     }
 
-    public static void viewTransactions(Scanner s, Admin currentAdmin) {
+    public static void viewTransactions(Admin currentAdmin) {
+        Scanner s = new Scanner(System.in);
         ArrayList<Transactions> atmHistory = ATMMachine.getAvailableTransactions();
         System.out.println("Enter the Operation to do \n 1. See All Transactions \n 2. See Admin Transaction \n 3. See Specific User Transactions \n 4. Exit");
         int choice = Integer.parseInt(s.nextLine());
@@ -102,12 +124,8 @@ public class AdminActions {
             }
 
         }
-
-
 //for future
 //        for ATM by admins
 //        public static void addATM()
-
-
     }
 }
