@@ -1,5 +1,7 @@
 package ATM;
 
+
+//Transaction POJO class to store all transactions as objects
 public class Transactions {
     private Object user;
     private String type;

@@ -7,18 +7,18 @@ import java.util.Scanner;
 
 public class AtmActions {
 
-    public static void startAtm(ArrayList<Admin> admins) throws CloneNotSupportedException {
+    public static void startAtm() throws CloneNotSupportedException {
         Scanner s = new Scanner(System.in);
-        admins.add(new Admin("admin", "admin"));
-        while (true) {
-            System.out.println("Enter Your Role : \n 1. Admin \n 2. User \n 3. Exit");
+        ATMMachine.getAvailableAdmins().add(new Admin("admin", "admin")); // creating an admin for login
+        while (true) { // infinite loop until user chooses exit
+            System.out.println("Enter Your Role : \n 1. Admin \n 2. User \n 3. Exit"); // asking roles
             int roleChoice = Integer.parseInt(s.nextLine());
-//            for choice 1
+//            for choice 1 - IF ADMIN
             if (roleChoice == 1) {
-                Admin currentAdmin = AdminActions.checkAdmin();
+                Admin currentAdmin = AdminActions.checkAdmin(); // storing admin object in a reference (returns null if no admin , returns object of admin if admin found , return new object with username null if password wrong)
                 if(currentAdmin==null)
                 {
-                    System.out.println("No users found..");
+                    System.out.println("No admins found..");
                 }
                 else if(currentAdmin.getAdminName()==null)
                 {
@@ -26,17 +26,17 @@ public class AtmActions {
                 }
                 else
                 {
-                    AtmActions.adminEntry(currentAdmin);
+                    AtmActions.adminEntry(currentAdmin); //if current object returned then calling operations of admins
                 }
 
             }
-//            for choice 2
+//            for choice 2 IF USER
             else if (roleChoice == 2)
             {
-                User currentUser = UserActions.checkUser();
+                User currentUser = UserActions.checkUser();// storing user object in a reference (returns null if no user , returns object of user if user found , return new object with username null if password wrong)
                 if(currentUser==null)
                 {
-                    System.out.println("No admins found..");
+                    System.out.println("No users found..");
                 }
                 else if(currentUser.getUserName()==null)
                 {
@@ -44,9 +44,10 @@ public class AtmActions {
                 }
                 else
                 {
-                    AtmActions.userEntry(currentUser);
+                    AtmActions.userEntry(currentUser);//if current object returned then calling operations of users
                 }
             }
+//            for choice 3 IF EXIT
             else if (roleChoice == 3)
             {
                 System.exit(1);
@@ -65,35 +66,41 @@ public class AtmActions {
                     Scanner s = new Scanner(System.in);
                     System.out.println("User Login Success..");
                     while (true) {
-                        System.out.println("Enter the Operation to do..");
+                        System.out.println("Enter the Operation to do.."); // asking which operation to do
                         System.out.println(" 1. Change Pin \n 2. Check Balance \n 3. Withdraw Cash \n 4. Deposit Cash \n 5. Show History \n 6. Logout");
                         int operationChoice = Integer.parseInt(s.nextLine());
+//                         1 - change the PIN of user
                         if (operationChoice == 1)
                         {
                             UserActions.changePin(s,currentUser);
                         }
+//                        2 - Check balance of user
                         else if (operationChoice == 2)
                         {
                             System.out.println("Your current balance is " + currentUser.getBalance());
                         }
+//                        3 - Withdraw Cash from ATM
                         else if (operationChoice == 3)
                         {
                             UserActions.withdrawCash(s,currentUser);
                         }
+//                        4 - Deposit cash to ATM and Account
                         else if (operationChoice == 4)
                         {
                             UserActions.depositCash(s,currentUser);
                         }
+//                        5 - View the transactions made by user
                         else if (operationChoice == 5)
                         {
                             UserActions.viewTransactions(currentUser);
                         }
+//                        6 - Logout of account
                         else if (operationChoice == 6)
                         {
-                            System.out.println("Exittingg...");
+                            System.out.println("Logged out...");
                             return;
                         }
-//                        more operations need to be added here
+//                        if wrong input
                         else
                         {
                             System.out.println("Enter the correct option");
@@ -108,32 +115,36 @@ public class AtmActions {
                 System.out.println("Access Granted");
                 while (true)
                 {
+//                    Asking the operations to do ...
                     System.out.println("Enter the operation to do... \n 1. Add User \n 2. Delete User \n 3. Deposit Cash in ATM \n 4. Show All Transaction History\n 5. Logout");
                     int operationChoice = Integer.parseInt(s.nextLine());
+//                    1 - Adding a new User
                     if (operationChoice == 1)
                     {
                         AdminActions.addUser();
                     }
+//                    2 - Deleting an existing user
                     else if (operationChoice == 2)
                     {
                         AdminActions.deleteUser();
                     }
+//                    3 - Deposit the money into ATM
                     else if (operationChoice == 3)
                     {
                         AdminActions.depositMoney(currentAdmin);
                     }
-
-                    // view all transactions must be added here
+//                    4 - View all transactions (all,specific user,admin)
                     else if (operationChoice == 4)
                     {
-
                         AdminActions.viewTransactions(currentAdmin);
                     }
+//                    5 - Logout of Account
                     else if (operationChoice == 5)
                     {
-                        System.out.println("Exitting....");
+                        System.out.println("Logged out....");
                         return;
                     }
+//                    For wrong input
                     else
                     {
                         System.out.println("Enter the correct option");
@@ -142,45 +153,7 @@ public class AtmActions {
             }
 
 
-
-
-
-    public static double getBalance(ArrayList<Notes> notesInAtm,int twoThousand,int fiveHundred, int twoHundred, int oneHundred)
-    {
-        double balance = ATMMachine.getBalance();
-        for(Notes notes:notesInAtm)
-        {
-            long twoThousands = 0;
-            long fiveHundreds = 0;
-            long twoHundreds = 0;
-            long oneHundreds = 0;
-
-            if(notes.getNote().equals("2000"))
-            {
-                notes.setCount(notes.getCount()+twoThousand);
-                twoThousands = 2000 * notes.getCount();
-            }
-            else if(notes.getNote().equals("500"))
-            {
-                notes.setCount(notes.getCount()+fiveHundred);
-                fiveHundreds = 500 * notes.getCount();
-            }
-            else if(notes.getNote().equals("200"))
-            {
-                notes.setCount(notes.getCount()+twoHundred);
-                twoHundreds = 200 * notes.getCount();
-            }
-            else if(notes.getNote().equals("100"))
-            {
-                notes.setCount(notes.getCount()+oneHundred);
-                oneHundreds = 100 * notes.getCount();
-            }
-
-            balance += twoThousands + fiveHundreds + twoHundreds + oneHundreds;
-        }
-        return balance;
-    }
-
+//    Method to calculating total amount with all the notes
     public static long getDepositedBalance(int twoThousand,int fiveHundred, int twoHundred, int oneHundred)
     {
         long balance = 2000*twoThousand + 500*fiveHundred + 200*twoHundred + 100*oneHundred;
