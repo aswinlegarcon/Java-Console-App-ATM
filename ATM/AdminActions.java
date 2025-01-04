@@ -10,71 +10,90 @@ public class AdminActions {
     //        for users by admins
 
     // function to check admin and return objects for verification
-    public static Admin checkAdmin()
+    public static Account checkAdmin()
     {
         Scanner s = new Scanner(System.in);
         System.out.print("Enter the Admin name: ");
         String name = s.nextLine();
         System.out.print("Enter the Password: ");
         String pass = s.nextLine();
-        ArrayList<ATM.Admin> adminsAvailable = ATMMachine.getAvailableAdmins();
-        for(ATM.Admin individualAdmin:adminsAvailable)// loop user arraylist for checking the availability of admin
+        ArrayList<Account> adminsAvailable = ATMMachine.getAvailableAccounts();
+        for(Account individualAdmin:adminsAvailable)// loop user arraylist for checking the availability of admin
         {
-            if (individualAdmin.getAdminName().equals(name) && individualAdmin.getPassword().equals(pass))// if username and password matches - return admin object
+            if(individualAdmin instanceof Admin) // check if the current object came inside loop is of type Admin's object
             {
-                return individualAdmin;
+                if (individualAdmin.getUserName().equals(name) && individualAdmin.getPassword().equals(pass))// if username and password matches - return admin object
+                {
+                    return individualAdmin;
+                }
+                else if(individualAdmin.getUserName().equals(name) && !individualAdmin.getPassword().equals(pass))// if username matches but pin does not match - return new admin with null as username
+                {
+                    return new Account(null,null);
+                }
             }
-            else if(individualAdmin.getAdminName().equals(name) && !individualAdmin.getPassword().equals(pass))// if username matches but pin does not match - return new admin with null as username
-            {
-                return new ATM.Admin(null,null);
-            }
+
         }
         return null;// if no admins found in the array list then return null
     }
 
-// function to add user
-    public static void addUser() {
+    // function to add user
+    public static void addUser()
+    {
         Scanner s = new Scanner(System.in);
         System.out.print("Enter the User's Name to Add : ");
         String userName = s.nextLine();
-        for(User users:ATMMachine.getAvailableUsers())
+        for(Account users:ATMMachine.getAvailableAccounts()) // loop over all the accounts
         {
-            if(users.getUserName().equals(userName))//check if the username already exists
+            if (users instanceof User) // true if the current object came in is of object type User
             {
-                System.out.println("User already exists..");
-                return;
+                if (users.getUserName().equals(userName))//check if the username already exists
+                {
+                    System.out.println("User already exists..");
+                    return;
+                }
             }
         }
-        System.out.print("Enter the pin of User : ");
-        int pin = Integer.parseInt(s.nextLine());
-        ATMMachine.getAvailableUsers().add(new User(userName, pin, 0));// adding user object to the arraylist
-        System.out.println("User Added Successfully..");
+                System.out.print("Enter the password of User : ");
+                String password = s.nextLine();
+                ATMMachine.getAvailableAccounts().add(new User(userName, password, 0));// adding user object to the Account arraylist
+                System.out.println("User Added Successfully..");
     }
 
-//    function to delete the user
+    //    function to delete the user
     public static void deleteUser() {
         Scanner s = new Scanner(System.in);
-        ArrayList<User> usersToRemove = ATMMachine.getAvailableUsers(); // getting and storing the arraylist of users
+        ArrayList<Account> usersToRemove = ATMMachine.getAvailableAccounts(); // getting and storing the arraylist of users
         if (!usersToRemove.isEmpty()) { //if users not empty
             System.out.println("The Available Users are...");
             int count = 1;
-            for (User temp : usersToRemove) { // display all the available users
-                System.out.println(count + " - " + temp.getUserName());
-                count++;
+            for (Account temp : usersToRemove) { // display all the available users
+                if(temp instanceof User)
+                {
+                    System.out.println(count + " - " + temp.getUserName());
+                    count++;
+                }
             }
-            System.out.print("Enter the Id no of the User to remove :"); // asking the admin which username to remove
-            int removeChoice = Integer.parseInt(s.nextLine());
-            ATMMachine.getAvailableUsers().remove(removeChoice-1);// index start from zero so -1 to remove
-            System.out.println("User Successfully Removed...");
+            System.out.print("Enter the name of the User to remove :"); // asking the admin which username to remove
+            String removeChoice = s.nextLine();
+            for (Account temp : usersToRemove) { // display all the available accounts
+                if(temp instanceof User) //display all the available users
+                {
+                    if(temp.getUserName().equals(removeChoice))
+                    {
+                        ATMMachine.getAvailableAccounts().remove(temp);// removing that current user object
+                        System.out.println("User Successfully Removed...");
+                        return;
+                    }
+                }
+            }
         }
         else // if no users available
         {
-
             System.out.println("No users available..Add user and try again..");
         }
     }
 
-//   function to deposit money in ATM
+    //   function to deposit money in ATM
     public static void depositMoney(Admin currentAdmin) {
 
         Scanner s = new Scanner(System.in);
@@ -114,7 +133,7 @@ public class AdminActions {
                 }
 
             }
-            ATMMachine.getAvailableTransactions().add(new Transactions("Deposited", amountToDeposit, currentAdmin)); // adding transaction as objects
+            currentAdmin.getAvailableTransactions().add(new Transactions("Deposited", amountToDeposit, currentAdmin.getUserName())); // adding transaction as objects
             for (Notes notes : ATMMachine.getNotesInAtm())//loop for printing notes available after deposit
             {
                 System.out.println("Note: " + notes.getNote() + " Count : " + notes.getCount());
@@ -130,10 +149,10 @@ public class AdminActions {
         }
     }
 
-//    function to view transactions done by admin,all,specific user
+    //    function to view transactions done by admin,all,specific user
     public static void viewTransactions(Admin currentAdmin) {
         Scanner s = new Scanner(System.in);
-        ArrayList<Transactions> atmHistory = ATMMachine.getAvailableTransactions();// getting transaction history
+        ArrayList<Transactions> atmHistory = currentAdmin.getAvailableTransactions();// getting transaction history
 //        asking user to choose operation
         System.out.println("Enter the Operation to do \n 1. See All Transactions \n 2. See Admin Transaction \n 3. See Specific User Transactions \n 4. Exit");
         int choice = Integer.parseInt(s.nextLine());
@@ -144,29 +163,45 @@ public class AdminActions {
                     for (Transactions history : atmHistory) {
                         System.out.println(history.getUser() + " has " + history.getType() + " Rs." + history.getAmount());
                     }
+                    for(Account users : ATMMachine.getAvailableAccounts())
+                    {
+                        if(users instanceof User)
+                        {
+                            for (Transactions history : users.getAvailableTransactions()) {
+                                    System.out.println(history.getUser() + " has " + history.getType() + " Rs." + history.getAmount());
+                            }
+                        }
+                    }
                     break;
 //                    to show admin transactions
                 case 2:
-                    for (Transactions history : atmHistory) {
-                        if (currentAdmin.getAdminName().equals(history.getUser())) {
+                    for (Transactions history : atmHistory)
+                    {
                             System.out.println(history.getUser() + " has " + history.getType() + " Rs." + history.getAmount());
-                        }
-
                     }
                     break;
 //                    to show specific user transactions
                 case 3:
                     System.out.println("Available users..");
-                    for (User users : ATMMachine.getAvailableUsers()) {//display all the available users
-                        System.out.println("* " + users.getUserName());
+                    for (Account users : ATMMachine.getAvailableAccounts()) {//display all the available users
+                        if(users instanceof User)
+                        {
+                            System.out.println("* " + users.getUserName());
+                        }
                     }
                     System.out.print("Enter user to see history : ");// asking which user's transaction has to seen
                     String seeHistoryofUser = s.nextLine();
-                    for (Transactions history : atmHistory) {
-                        if (history.getUser().equals(seeHistoryofUser)) { // show transaction of that user
-                            System.out.println(seeHistoryofUser + " has " + history.getType() + " Rs." + history.getAmount());
+                    for(Account user: ATMMachine.getAvailableAccounts())
+                    {
+                        if(user instanceof User)
+                        {
+                            for (Transactions history : user.getAvailableTransactions()) {
+                                // show transaction of that user
+                                    System.out.println(seeHistoryofUser + " has " + history.getType() + " Rs." + history.getAmount());
+                            }
                         }
                     }
+
                     break;
 //                    to exit
                 case 4:

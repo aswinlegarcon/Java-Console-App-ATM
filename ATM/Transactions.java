@@ -3,11 +3,11 @@ package ATM;
 
 //Transaction POJO class to store all transactions as objects
 public class Transactions {
-    private Object user;
+    private String user;
     private String type;
     private double amount;
 
-    public Transactions(String type , double amount, Object user)
+    public Transactions(String type , double amount, String user)
     {
         this.type = type;
         this.amount = amount;
@@ -21,7 +21,7 @@ public class Transactions {
 
     public String getUser()
     {
-        return user.toString();
+        return user;
     }
 
     public double getAmount()

@@ -7,39 +7,43 @@ import java.util.Scanner;
 
 public class UserActions
 {
-// function to check user and return objects for verification
-    public static User checkUser()
+    // function to check user and return objects for verification
+    public static Account checkUser()
     {
         Scanner s = new Scanner(System.in);
         System.out.print("Enter the User name: ");
         String uname = s.nextLine();
-        System.out.print("Enter the Pin : ");
-        int pin = Integer.parseInt(s.nextLine());
-        ArrayList<User> usersAvailable = ATMMachine.getAvailableUsers();
-        for(User individualUser:usersAvailable) // loop user arraylist for checking the availability of user
+        System.out.print("Enter the Password : ");
+        String password = s.nextLine();
+        ArrayList<Account> usersAvailable = ATMMachine.getAvailableAccounts();
+        for(Account individualUser:usersAvailable) // loop user arraylist for checking the availability of user
         {
-            if (individualUser.getUserName().equals(uname) && individualUser.getPin() == pin)// if username and password matches - return user object
+            if(individualUser instanceof User)
             {
-                return individualUser;
+                if (individualUser.getUserName().equals(uname) && individualUser.getPassword().equals(password))// if username and password matches - return user object
+                {
+                    return individualUser;
+                }
+                else if(individualUser.getUserName().equals(uname) && !individualUser.getPassword().equals(password))// if username matches but pin does not match - return new user with null as username
+                {
+                    return new User(null,null,0);
+                }
             }
-            else if(individualUser.getUserName().equals(uname) && individualUser.getPin() != pin)// if username matches but pin does not match - return new user with null as username
-            {
-                return new User(null,0,0);
-            }
+
         }
         return null;// if no users found in the array list then return null
     }
 
-//    function to change the pin
+    //    function to change the pin
     public static void changePin(Scanner s,User currentUser)
     {
         System.out.print("Enter the Pin to change :");
-        int pin = Integer.parseInt(s.nextLine());
-        currentUser.setPin(pin);
-        System.out.println("Pin changed");
+        String password = s.nextLine();
+        currentUser.setPassword(password);
+        System.out.println("Password changed");
     }
 
-//    Helper function for user-withdraw, Calculate notes and give notes to user and reduce amount every time
+    //    Helper function for user-withdraw, Calculate notes and give notes to user and reduce amount every time
     private static double performWithdraw(double useramount, Notes note, ArrayList<String> denominationsList) {
         long count = (long) (useramount/Integer.parseInt(note.getNote())); // calculate how much note needed for the withdraw amount
         if(Long.parseLong(note.getNote()) <= useramount && 0 < note.getCount()) // the withdraw amount should be greater than note and the count of note must be greater than 0
@@ -75,7 +79,7 @@ public class UserActions
                 long finalAmountForCalculations = amountToWithdraw; // storing the original amount in another variable as we are going to change the original amount
                 for(Notes notesInAtm:ATMMachine.getNotesInAtm()) // loop to cloning the objects
                 {
-                    notesDuplicate.add(notesInAtm.clone());// clone the object and add in duplicate arraylist of notes
+                    notesDuplicate.add((Notes)notesInAtm.clone());// clone the object and add in duplicate arraylist of notes
                 }
                 while (amountToWithdraw!=0) // loop until the amount comes to zero
                 {
@@ -99,7 +103,7 @@ public class UserActions
 //                        {
 //                            System.out.println("Note: "+ notes.getNote()+" Count : "+notes.getCount() );
 //                        }
-                        ATMMachine.getAvailableTransactions().add(new Transactions("Withdrawed",finalAmountForCalculations,currentUser));// adding transaction as objects
+                        currentUser.getAvailableTransactions().add(new Transactions("Withdrawed",finalAmountForCalculations,currentUser.getUserName()));// adding transaction as objects
                         return;
                     }
                     else // after all the loop if amount not comes to zero then print this
@@ -116,11 +120,11 @@ public class UserActions
         }
 //        if amount not sufficient in user's account
         System.out.println("Insufficient amount in your Account ...");
-        }
+    }
 
 
 
-//function to deposit the cash in ATM and their account
+    //function to deposit the cash in ATM and their account
     public static void depositCash(Scanner s,User currentUser)
     {
         System.out.print("Enter the Amount :");//asking the amount
@@ -139,7 +143,7 @@ public class UserActions
         long amountToDeposit = AtmActions.getDepositedBalance(twoThousandNotes, fiveHundredNotes, twoHundredNotes, oneHundredNotes);
         if(firstAmountToDeposit==amountToDeposit)// if entered amount and notes entered(calculated as amount) equals
         {
-             // get the notes arraylist
+            // get the notes arraylist
             for(Notes note:ATMMachine.getNotesInAtm()) // loop the notes objects
             {
                 String noteType = note.getNote();// get the object name
@@ -159,7 +163,7 @@ public class UserActions
                 }
 
             }
-            ATMMachine.getAvailableTransactions().add(new Transactions("Deposited",amountToDeposit,currentUser)); // adding transaction as objects
+            currentUser.getAvailableTransactions().add(new Transactions("Deposited",amountToDeposit,currentUser.getUserName())); // adding transaction as objects
             for(Notes notes:ATMMachine.getNotesInAtm())//loop for printing notes available after deposit
             {
                 System.out.println("Note: "+ notes.getNote()+" Count : "+notes.getCount());
@@ -179,18 +183,15 @@ public class UserActions
 
     }
 
-//    function to view all the transaction done by the user
+    //    function to view all the transaction done by the user
     public static void viewTransactions(User currentUser)
     {
-        ArrayList<Transactions> userHistory = ATMMachine.getAvailableTransactions(); // get the transaction
+        ArrayList<Transactions> userHistory = currentUser.getAvailableTransactions(); // get the transaction
         if (!userHistory.isEmpty()) // if not empty then print the transaction
         {
             System.out.println("The Transactions you have made...");
             for (Transactions history : userHistory) {
-                if(currentUser.getUserName().equals(history.getUser())) // to check the current user's transaction
-                {
                     System.out.println("You "+ history.getType() + " Rs "+history.getAmount());
-                }
             }
 //            if transaction is empty then print no transactions
         }

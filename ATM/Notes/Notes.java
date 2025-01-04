@@ -1,11 +1,14 @@
 package ATM.Notes;
 
-
-public class Notes implements Cloneable {// implementing cloneable interface for using clone without any error
+public class Notes implements Cloneable {
     private String note;
     private long count;
 
-
+    protected Notes(String note, long count)
+    {
+        this.note = note;
+        this.count = count;
+    }
     public void setNote(String note)
     {
         this.note = note;
@@ -26,10 +29,9 @@ public class Notes implements Cloneable {// implementing cloneable interface for
         return this.count;
     }
 
-//    overriding clone method from protected - public && Object return type - Notes return type as we are cloning the notes onject
     @Override
-    public Notes clone() throws CloneNotSupportedException // clone method must be used with try catch block instead we are using like this(similar to try-catch)
+    public Object clone() throws CloneNotSupportedException
     {
-        return (Notes) super.clone();
+        return super.clone();
     }
 }

@@ -2,34 +2,23 @@ package ATM;
 
 import java.util.ArrayList;
 
-public class Admin {
+public class Admin extends Account{
 
 
     //        private static ArrayList<ATMMachine> atmMachines = new ArrayList<>();    for future usage when creating ATM objects
-    private  String adminName;
-    private  String password;
 
-    public Admin(String adminName,String password)
+    public Admin(String userName,String password)
     {
-        this.adminName = adminName;
-        this.password = password;
+        super(userName,password);
     }
     // for admins
-    public  String getAdminName()
-    {
-        return adminName;
-    }
-
-    public  String getPassword()
-    {
-        return password;
-    }
 
 
-    @Override
-    public String toString()
-    {
-        return this.adminName;
-    }
+
+//    @Override
+//    public String toString()
+//    {
+//        return this.adminName;
+//    }
 
 }
