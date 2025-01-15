@@ -4,6 +4,12 @@
 ## Overview
 This is a terminal-based application developed in Java, simulating the functionality of an Automated Teller Machine (ATM). The application allows users to perform banking operations such as withdrawing money, depositing money, checking account balance, and changing their PIN. Additionally, an admin interface is provided for managing the ATM's cash and viewing all transactions.
 
+
+## Class Diagram
+
+![ATM Class Diagram](https://github.com/user-attachments/assets/2618587e-508b-4333-aeec-b1e18fdf7699)
+
+
 ## Features
 
 ### User Features
@@ -80,23 +86,6 @@ This is a terminal-based application developed in Java, simulating the functiona
    - Add or manage user accounts.
    - Check the ATM's cash status.
 3. Perform the desired operations and log out securely.
-
-## Development Plan
-1. **Basic User Operations**
-   - Implement withdraw, deposit, and balance check features.
-2. **PIN Management**
-   - Add functionality for changing PIN securely.
-3. **Transaction Logs**
-   - Maintain detailed logs for user and admin activities.
-4. **Admin Panel**
-   - Develop tools for cash management and transaction overview.
-5. **Testing and Debugging**
-   - Write test cases for each module.
-
-## Future Enhancements
-- Add support for multiple account types (e.g., savings, current).
-- Implement support for card-based authentication.
-- Create a GUI version using JavaFX.
 
 ## Contact
 For any queries or feedback, reach out to:
