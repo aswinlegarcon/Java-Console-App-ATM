@@ -9,6 +9,10 @@ This is a terminal-based application developed in Java, simulating the functiona
 
 ![ATM Class Diagram](https://github.com/user-attachments/assets/2618587e-508b-4333-aeec-b1e18fdf7699)
 
+## Output Video
+
+https://github.com/user-attachments/assets/768563b3-ac57-4189-89ff-216a1ec4822d
+
 
 ## Features
 
