@@ -154,60 +154,97 @@ public class AdminActions {
         Scanner s = new Scanner(System.in);
         ArrayList<Transactions> atmHistory = currentAdmin.getAvailableTransactions();// getting transaction history
 //        asking user to choose operation
-        System.out.println("Enter the Operation to do \n 1. See All Transactions \n 2. See Admin Transaction \n 3. See Specific User Transactions \n 4. Exit");
-        int choice = Integer.parseInt(s.nextLine());
-        if (!atmHistory.isEmpty()) {//if transaction not empty
-            switch (choice) {
+        while (true)
+        {
+            System.out.println("Enter the Operation to do \n 1. See All Transactions \n 2. See Admin Transaction \n 3. See Specific User Transactions \n 4. Exit");
+            int choice = Integer.parseInt(s.nextLine());
+
+                switch (choice) {
 //                to show all transactions
-                case 1:
-                    for (Transactions history : atmHistory) {
-                        System.out.println(history.getUser() + " has " + history.getType() + " Rs." + history.getAmount());
-                    }
-                    for(Account users : ATMMachine.getAvailableAccounts())
-                    {
-                        if(users instanceof User)
+                    case 1:
+                        boolean checkTransactionAvailability = false; // variable to check if transactions are available or not
+                        if (atmHistory.isEmpty()) { // if admin transaction empty
+                            System.out.println("No admin transactions found...!!");
+                        }
+                        else // or print
                         {
-                            for (Transactions history : users.getAvailableTransactions()) {
-                                    System.out.println(history.getUser() + " has " + history.getType() + " Rs." + history.getAmount());
+                            for (Transactions history : atmHistory) {
+                                System.out.println(history.getUser() + " has " + history.getType() + " Rs." + history.getAmount());
                             }
                         }
-                    }
-                    break;
+
+                        for(Account users : ATMMachine.getAvailableAccounts())
+                        {
+                            if(users instanceof User)
+                            {
+                                if(!users.getAvailableTransactions().isEmpty())
+                                {
+                                    checkTransactionAvailability = true;
+                                    for (Transactions history : users.getAvailableTransactions()) {
+                                        System.out.println(history.getUser() + " has " + history.getType() + " Rs." + history.getAmount());
+                                    }
+                                }
+                            }
+                        }
+                        if(!checkTransactionAvailability)
+                        {
+                            System.out.println("No transactions for user..");
+                        }
+                        break;
 //                    to show admin transactions
-                case 2:
-                    for (Transactions history : atmHistory)
-                    {
-                            System.out.println(history.getUser() + " has " + history.getType() + " Rs." + history.getAmount());
-                    }
-                    break;
-//                    to show specific user transactions
-                case 3:
-                    System.out.println("Available users..");
-                    for (Account users : ATMMachine.getAvailableAccounts()) {//display all the available users
-                        if(users instanceof User)
-                        {
-                            System.out.println("* " + users.getUserName());
+                    case 2:
+                        if (!atmHistory.isEmpty()) {//if transaction not empty
+                            for (Transactions history : atmHistory) {
+                                System.out.println(history.getUser() + " has " + history.getType() + " Rs." + history.getAmount());
+                            }
+                            break;
                         }
-                    }
-                    System.out.print("Enter user to see history : ");// asking which user's transaction has to seen
-                    String seeHistoryofUser = s.nextLine();
-                    for(Account user: ATMMachine.getAvailableAccounts())
-                    {
-                        if(user instanceof User)
-                        {
-                            for (Transactions history : user.getAvailableTransactions()) {
-                                // show transaction of that user
-                                    System.out.println(seeHistoryofUser + " has " + history.getType() + " Rs." + history.getAmount());
+                        System.out.println("No admin transactions found...!!");
+                        break;
+//                    to show specific user transactions
+                    case 3:
+                        boolean checkUserAvailability = false;
+                        System.out.println("Available users..");
+                        for (Account users : ATMMachine.getAvailableAccounts()) {//display all the available users
+                            if(users instanceof User)
+                            {
+                                System.out.println("* " + users.getUserName());
+                                checkUserAvailability = true;
                             }
                         }
-                    }
+                        if(!checkUserAvailability)
+                        {
+                            System.out.println("No Users found..");
+                            break;
+                        }
+                        System.out.print("Enter user to see history : ");// asking which user's transaction has to seen
+                        String seeHistoryofUser = s.nextLine();
+                        for(Account user: ATMMachine.getAvailableAccounts())
+                        {
+                            if(user instanceof User)
+                            {
+                                if(user.getUserName().equals(seeHistoryofUser))
+                                {
+                                    if(user.getAvailableTransactions().isEmpty())
+                                    {
+                                        System.out.println("No transactions found for this user...");
+                                        break;
+                                    }
+                                    for (Transactions history : user.getAvailableTransactions()) {
+                                        // show transaction of that user
+                                        System.out.println(seeHistoryofUser + " has " + history.getType() + " Rs." + history.getAmount());
+                                    }
+                                }
+                            }
+                        }
 
-                    break;
+                        break;
 //                    to exit
-                case 4:
-                    break;
+                    case 4:
+                        return;
 
-            }
+                }
+
 
         }
 //for future

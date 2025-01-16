@@ -15,7 +15,7 @@ public class AtmActions {
             int roleChoice = Integer.parseInt(s.nextLine());
 //            for choice 1 - IF ADMIN
             if (roleChoice == 1) {
-                Admin currentAdmin = (Admin)AdminActions.checkAdmin(); // storing account object type-casted to admin object in a reference (returns null if no admin , returns object of admin if admin found , return new object with username null if password wrong)
+                Account currentAdmin = AdminActions.checkAdmin(); // storing account object type-casted to admin object in a reference (returns null if no admin , returns object of admin if admin found , return new object with username null if password wrong)
                 if(currentAdmin==null)
                 {
                     System.out.println("No admins found..");
@@ -26,14 +26,14 @@ public class AtmActions {
                 }
                 else
                 {
-                    AtmActions.adminEntry(currentAdmin); //if current object returned then calling operations of admins
+                    AtmActions.adminEntry((Admin)currentAdmin); //if current object returned then calling operations of admins
                 }
 
             }
 //            for choice 2 IF USER
             else if (roleChoice == 2)
             {
-                User currentUser = (User)UserActions.checkUser();// storing account object type casted to user object in a reference (returns null if no user , returns object of user if user found , return new object with username null if password wrong)
+                Account currentUser = UserActions.checkUser();// storing account object type casted to user object in a reference (returns null if no user , returns object of user if user found , return new object with username null if password wrong)
                 if(currentUser==null)
                 {
                     System.out.println("No users found..");
@@ -44,7 +44,7 @@ public class AtmActions {
                 }
                 else
                 {
-                    AtmActions.userEntry(currentUser);//if current object returned then calling operations of users
+                    AtmActions.userEntry((User)currentUser);//if current object returned then calling operations of users
                 }
             }
 //            for choice 3 IF EXIT

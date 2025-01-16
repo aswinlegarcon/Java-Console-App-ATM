@@ -38,7 +38,7 @@ public class UserActions
     //    function to change the pin
     public static void changePin(Scanner s,User currentUser)
     {
-        System.out.println("Enter the current pin : ");// get the current pin
+        System.out.print("Enter the current pin : ");// get the current pin
         String currentPassword = s.nextLine();
         if(!currentUser.getPassword().equals(currentPassword)) // if current pin doesnot match the user's pin
         {
@@ -89,7 +89,7 @@ public class UserActions
                 {
                     notesDuplicate.add((Notes)notesInAtm.clone());// clone the object and add in duplicate arraylist of notes
                 }
-                while (amountToWithdraw!=0) // loop until the amount comes to zero
+                if(amountToWithdraw!=0) // if amount not zero
                 {
                     for(Notes notesInDuplicate:notesDuplicate) { // loop the duplicate note objects
                         String noteType = notesInDuplicate.getNote(); // store the incoming note object's name in a variable
