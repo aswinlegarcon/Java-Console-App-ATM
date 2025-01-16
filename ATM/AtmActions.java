@@ -15,7 +15,7 @@ public class AtmActions {
             int roleChoice = Integer.parseInt(s.nextLine());
 //            for choice 1 - IF ADMIN
             if (roleChoice == 1) {
-                Admin currentAdmin = (Admin)AdminActions.checkAdmin(); // storing account object type casted to admin object in a reference (returns null if no admin , returns object of admin if admin found , return new object with username null if password wrong)
+                Admin currentAdmin = (Admin)AdminActions.checkAdmin(); // storing account object type-casted to admin object in a reference (returns null if no admin , returns object of admin if admin found , return new object with username null if password wrong)
                 if(currentAdmin==null)
                 {
                     System.out.println("No admins found..");

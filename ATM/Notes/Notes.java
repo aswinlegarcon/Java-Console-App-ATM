@@ -1,6 +1,6 @@
 package ATM.Notes;
 
-public class Notes implements Cloneable {
+public abstract class Notes implements Cloneable {
     private String note;
     private long count;
 
@@ -30,8 +30,7 @@ public class Notes implements Cloneable {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException
-    {
+    public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
 }

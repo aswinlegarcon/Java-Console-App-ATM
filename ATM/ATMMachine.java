@@ -14,8 +14,6 @@ import java.util.Arrays;
  * added here by creating objects*/
 
 public class ATMMachine {
-//    private static ArrayList<User> users = new ArrayList<>(); // To store list of users
-//    private static ArrayList<Admin> admins = new ArrayList<>(); // To store list of admins
     private static ArrayList<Account> accounts = new ArrayList<>(); // To store both admin and user accounts
     //    To store notes available in ATM - for now initialising name alone with count as 0
     private static ArrayList<Notes> notesInAtm = new ArrayList<Notes>(Arrays.asList(new TwoThousand("2000", 0), new FiveHundred("500", 0), new TwoHundred("200", 0),new OneHundred("100", 0)));

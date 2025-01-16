@@ -3,6 +3,7 @@ package ATM;
 import ATM.Notes.Notes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class UserActions
@@ -37,16 +38,23 @@ public class UserActions
     //    function to change the pin
     public static void changePin(Scanner s,User currentUser)
     {
-        System.out.print("Enter the Pin to change :");
+        System.out.println("Enter the current pin : ");// get the current pin
+        String currentPassword = s.nextLine();
+        if(!currentUser.getPassword().equals(currentPassword)) // if current pin doesnot match the user's pin
+        {
+            System.out.println("The current pin is wrong..Try again"); // print error statement
+            return;
+        }
+        System.out.print("Enter the Pin to change :"); // If the current pin is right then get the new pin
         String password = s.nextLine();
-        currentUser.setPassword(password);
-        System.out.println("Password changed");
+        currentUser.setPassword(password); // set the password
+        System.out.println("Password changed"); // print password has been changed
     }
 
     //    Helper function for user-withdraw, Calculate notes and give notes to user and reduce amount every time
     private static double performWithdraw(double useramount, Notes note, ArrayList<String> denominationsList) {
         long count = (long) (useramount/Integer.parseInt(note.getNote())); // calculate how much note needed for the withdraw amount
-        if(Long.parseLong(note.getNote()) <= useramount && 0 < note.getCount()) // the withdraw amount should be greater than note and the count of note must be greater than 0
+        if(Long.parseLong(note.getNote()) <= useramount && note.getCount() > 0) // the withdraw amount should be greater than note and the count of note must be greater than 0
         {
             if(count <= note.getCount()) // if the count less than available count of notes in ATM
             {
@@ -91,6 +99,7 @@ public class UserActions
                                 break;
                         }
                     } // loop of objects end
+
                     if(amountToWithdraw == 0)  // if amount comes to zero
                     {
                         ATMMachine.setNotesInAtm(notesDuplicate);// set duplicate notes list to original
