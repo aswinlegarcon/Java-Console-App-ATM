@@ -3,13 +3,15 @@ package ATM;
 import ATM.Notes.Notes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
-public class UserActions
+// implementing UserAction interface to get a template of all methods
+public class UserActions implements ATM.Templates.UserActions
 {
     // function to check user and return objects for verification
-    public static Account checkUser()
+    //    Overriding method from User Interface
+    @Override
+    public Account login()
     {
         Scanner s = new Scanner(System.in);
         System.out.print("Enter the User name: ");
@@ -36,8 +38,11 @@ public class UserActions
     }
 
     //    function to change the pin
-    public static void changePin(Scanner s,User currentUser)
+    //    Overriding method from User Interface
+    @Override
+    public  void changePin(User currentUser)
     {
+        Scanner s = new Scanner(System.in);
         System.out.print("Enter the current pin : ");// get the current pin
         String currentPassword = s.nextLine();
         if(!currentUser.getPassword().equals(currentPassword)) // if current pin doesnot match the user's pin
@@ -74,7 +79,11 @@ public class UserActions
         return useramount; // false if condition - return the amount as it is
     }
 
-    public static void withdrawCash (Scanner s, User currentUser) throws CloneNotSupportedException {
+    @Override
+    //    Overriding method from User Interface
+    public void withdrawCash (User currentUser) throws CloneNotSupportedException
+    {
+        Scanner s = new Scanner(System.in);
         ArrayList<String> notesTransaction = new ArrayList<>(); // String array to store the notes that has been supplied to user
         ArrayList<Notes> notesDuplicate = new ArrayList<>(); // A duplicate notes arraylist to clone and store same notes object in order to unchange the original list everytime
 
@@ -134,8 +143,12 @@ public class UserActions
 
 
     //function to deposit the cash in ATM and their account
-    public static void depositCash(Scanner s,User currentUser)
+    //    Overriding method from User Interface
+    @Override
+    public void depositMoney(Account currentAccount)
     {
+        User currentUser = (User)currentAccount; // typecasting to User Type to call User POJO's methods
+        Scanner s = new Scanner(System.in);
         System.out.print("Enter the Amount :");//asking the amount
         long firstAmountToDeposit = Long.parseLong(s.nextLine());
 //        asking the notes one by one
@@ -193,8 +206,11 @@ public class UserActions
     }
 
     //    function to view all the transaction done by the user
-    public static void viewTransactions(User currentUser)
+//    Overriding method from User Interface
+    @Override
+    public void viewTransactions(Account currentAccount)
     {
+        User currentUser = (User) currentAccount; // typecasting to User Type to call User POJO's methods
         ArrayList<Transactions> userHistory = currentUser.getAvailableTransactions(); // get the transaction
         if (!userHistory.isEmpty()) // if not empty then print the transaction
         {

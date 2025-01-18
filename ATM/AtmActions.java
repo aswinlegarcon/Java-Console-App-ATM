@@ -1,21 +1,20 @@
 package ATM;
 
-import ATM.Notes.*;
-
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class AtmActions {
 
     public static void startAtm() throws CloneNotSupportedException {
         Scanner s = new Scanner(System.in);
+        AdminActions adminActions = new AdminActions();
+        UserActions userActions = new UserActions();
         ATMMachine.getAvailableAccounts().add(new Admin("admin", "admin")); // creating an admin for login
         while (true) { // infinite loop until user chooses exit
             System.out.println("Enter Your Role : \n 1. Admin \n 2. User \n 3. Exit"); // asking roles
             int roleChoice = Integer.parseInt(s.nextLine());
 //            for choice 1 - IF ADMIN
             if (roleChoice == 1) {
-                Account currentAdmin = AdminActions.checkAdmin(); // storing account object type-casted to admin object in a reference (returns null if no admin , returns object of admin if admin found , return new object with username null if password wrong)
+                Account currentAdmin = adminActions.login(); // storing account object type-casted to admin object in a reference (returns null if no admin , returns object of admin if admin found , return new object with username null if password wrong)
                 if(currentAdmin==null)
                 {
                     System.out.println("No admins found..");
@@ -26,14 +25,14 @@ public class AtmActions {
                 }
                 else
                 {
-                    AtmActions.adminEntry((Admin)currentAdmin); //if current object returned then calling operations of admins
+                    AtmActions.adminEntry(currentAdmin); //if current object returned then calling operations of admins
                 }
 
             }
 //            for choice 2 IF USER
             else if (roleChoice == 2)
             {
-                Account currentUser = UserActions.checkUser();// storing account object type casted to user object in a reference (returns null if no user , returns object of user if user found , return new object with username null if password wrong)
+                Account currentUser = userActions.login();// storing account object type casted to user object in a reference (returns null if no user , returns object of user if user found , return new object with username null if password wrong)
                 if(currentUser==null)
                 {
                     System.out.println("No users found..");
@@ -44,7 +43,7 @@ public class AtmActions {
                 }
                 else
                 {
-                    AtmActions.userEntry((User)currentUser);//if current object returned then calling operations of users
+                    AtmActions.userEntry(currentUser);//if current object returned then calling operations of users
                 }
             }
 //            for choice 3 IF EXIT
@@ -61,9 +60,11 @@ public class AtmActions {
     }
 
 
-    public static void userEntry(User currentUser) throws CloneNotSupportedException
+    public static void userEntry(Account currentAccount) throws CloneNotSupportedException
     {
         Scanner s = new Scanner(System.in);
+        UserActions userActions = new UserActions();
+        User currentUser = (User) currentAccount;
         System.out.println("User Login Success..");
         while (true) {
             System.out.println("Enter the Operation to do.."); // asking which operation to do
@@ -72,7 +73,7 @@ public class AtmActions {
 //                         1 - change the PIN of user
             if (operationChoice == 1)
             {
-                UserActions.changePin(s,currentUser);
+                userActions.changePin(currentUser);
             }
 //                        2 - Check balance of user
             else if (operationChoice == 2)
@@ -82,17 +83,17 @@ public class AtmActions {
 //                        3 - Withdraw Cash from ATM
             else if (operationChoice == 3)
             {
-                UserActions.withdrawCash(s,currentUser);
+                userActions.withdrawCash(currentUser);
             }
 //                        4 - Deposit cash to ATM and Account
             else if (operationChoice == 4)
             {
-                UserActions.depositCash(s,currentUser);
+                userActions.depositMoney(currentUser);
             }
 //                        5 - View the transactions made by user
             else if (operationChoice == 5)
             {
-                UserActions.viewTransactions(currentUser);
+                userActions.viewTransactions(currentUser);
             }
 //                        6 - Logout of account
             else if (operationChoice == 6)
@@ -110,8 +111,11 @@ public class AtmActions {
     }
 
 
-    public static void adminEntry(Admin currentAdmin) {
+    public static void adminEntry(Account currentAccount)
+    {
         Scanner s = new Scanner(System.in);
+        AdminActions adminActions = new AdminActions();
+        Admin currentAdmin = (Admin) currentAccount;
         System.out.println("Access Granted");
         while (true)
         {
@@ -121,22 +125,22 @@ public class AtmActions {
 //                    1 - Adding a new User
             if (operationChoice == 1)
             {
-                AdminActions.addUser();
+                adminActions.addUser();
             }
 //                    2 - Deleting an existing user
             else if (operationChoice == 2)
             {
-                AdminActions.deleteUser();
+                adminActions.deleteUser();
             }
 //                    3 - Deposit the money into ATM
             else if (operationChoice == 3)
             {
-                AdminActions.depositMoney(currentAdmin);
+                adminActions.depositMoney(currentAdmin);
             }
 //                    4 - View all transactions (all,specific user,admin)
             else if (operationChoice == 4)
             {
-                AdminActions.viewTransactions(currentAdmin);
+                adminActions.viewTransactions(currentAdmin);
             }
 //                    5 - Logout of Account
             else if (operationChoice == 5)

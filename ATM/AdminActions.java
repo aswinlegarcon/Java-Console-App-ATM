@@ -1,16 +1,20 @@
 package ATM;
 import ATM.Notes.Notes;
+import ATM.Templates.UserActions;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class AdminActions {
+// implementing AdminAction interface to get a template of all methods
+public class AdminActions implements ATM.Templates.AdminActions {
 
 
     //        for users by admins
 
     // function to check admin and return objects for verification
-    public static Account checkAdmin()
+//    Overriding method from Admin Interface
+    public Account login()
     {
         Scanner s = new Scanner(System.in);
         System.out.print("Enter the Admin name: ");
@@ -36,8 +40,11 @@ public class AdminActions {
         return null;// if no admins found in the array list then return null
     }
 
+
     // function to add user
-    public static void addUser()
+    //    Overriding method from Admin Interface
+    @Override
+    public void addUser()
     {
         Scanner s = new Scanner(System.in);
         System.out.print("Enter the User's Name to Add : ");
@@ -60,7 +67,9 @@ public class AdminActions {
     }
 
     //    function to delete the user
-    public static void deleteUser() {
+    //    Overriding method from Admin Interface
+    @Override
+    public  void deleteUser() {
         Scanner s = new Scanner(System.in);
         ArrayList<Account> usersToRemove = ATMMachine.getAvailableAccounts(); // getting and storing the arraylist of users
         if (!usersToRemove.isEmpty()) { //if users not empty
@@ -94,9 +103,11 @@ public class AdminActions {
     }
 
     //   function to deposit money in ATM
-    public static void depositMoney(Admin currentAdmin) {
-
+    //    Overriding method from Admin Interface
+    @Override
+    public void depositMoney(Account currentAccount) {
         Scanner s = new Scanner(System.in);
+        Admin currentAdmin = (Admin)currentAccount; // typecasting Account object to Admin reference type to access methods
         System.out.print("Enter the Amount :");//asking the amount
         long firstAmountToDeposit = Long.parseLong(s.nextLine());
 //        asking the notes one by one
@@ -150,8 +161,11 @@ public class AdminActions {
     }
 
     //    function to view transactions done by admin,all,specific user
-    public static void viewTransactions(Admin currentAdmin) {
+    //    Overriding method from Admin Interface
+    @Override
+    public void viewTransactions(Account currentAccount) {
         Scanner s = new Scanner(System.in);
+        Admin currentAdmin = (Admin)currentAccount;
         ArrayList<Transactions> atmHistory = currentAdmin.getAvailableTransactions();// getting transaction history
 //        asking user to choose operation
         while (true)
@@ -251,4 +265,5 @@ public class AdminActions {
 //        for ATM by admins
 //        public static void addATM()
     }
+
 }
