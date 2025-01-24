@@ -1,6 +1,7 @@
 package ATM;
 import ATM.Notes.Notes;
 import ATM.Templates.UserActions;
+import BookMyShow.BookMyShow;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -261,9 +262,45 @@ public class AdminActions implements ATM.Templates.AdminActions {
 
 
         }
-//for future
+
+    }
+//    Method to view all the users
+    public void viewUsers()
+    {
+        System.out.println("The Available Users are :");
+        for(Account account:ATMMachine.getAvailableAccounts()) // get all the acoount objects
+        {
+            if(account instanceof User) // if object is a of User object
+            {
+                System.out.println("->"+account.getUserName()); // print the user's name
+            }
+        }
+    }
+//    Method to add admins
+    public void addAdmin()
+    {
+        Scanner s = new Scanner(System.in);
+        System.out.print("Enter the Admin name to add : "); // get the admin name to add
+        String adminName = s.nextLine();
+        for(Account account: ATMMachine.getAvailableAccounts()) // loop over account objects
+        {
+            if(account.getClass().getSimpleName().equals("Admin")) // if the object is of Admin (Using getClass()) can also use instanceOf operator
+            {
+                if (account.getUserName().equals(adminName)) // if the entered name already exist print already exist
+                {
+                    System.out.println("Admin already exists..");
+                    return; // return if already exists
+                }
+            }
+        }
+        System.out.print("Enter the password : "); // get the password
+        String password = s.nextLine();
+        ATMMachine.getAvailableAccounts().add(new Admin(adminName,password)); // add the admin object to the arraylist of accounts
+        System.out.println("Admin added successfully..");
+    }
+
+    //for future
 //        for ATM by admins
 //        public static void addATM()
-    }
 
 }

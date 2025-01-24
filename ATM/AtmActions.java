@@ -120,7 +120,7 @@ public class AtmActions {
         while (true)
         {
 //                    Asking the operations to do ...
-            System.out.println("Enter the operation to do... \n 1. Add User \n 2. Delete User \n 3. Deposit Cash in ATM \n 4. Show All Transaction History\n 5. Logout");
+            System.out.println("Enter the operation to do... \n 1. Add User \n 2. Delete User \n 3. Deposit Cash in ATM \n 4. Show All Transaction History\n 5. View All Users\n 6. Add Admin\n 7. Logout");
             int operationChoice = Integer.parseInt(s.nextLine());
 //                    1 - Adding a new User
             if (operationChoice == 1)
@@ -142,8 +142,18 @@ public class AtmActions {
             {
                 adminActions.viewTransactions(currentAdmin);
             }
-//                    5 - Logout of Account
-            else if (operationChoice == 5)
+//            5 - View all the available users
+            else if(operationChoice == 5)
+            {
+                adminActions.viewUsers();
+            }
+//            6 - Add admins if needed
+            else if(operationChoice == 6)
+            {
+                adminActions.addAdmin();
+            }
+//                    7 - Logout of Account
+            else if (operationChoice == 7)
             {
                 System.out.println("Logged out....");
                 return;
