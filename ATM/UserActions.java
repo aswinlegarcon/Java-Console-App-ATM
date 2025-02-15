@@ -1,6 +1,6 @@
 package ATM;
 
-import ATM.Notes.Notes;
+import ATM.Notes.Note;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -57,7 +57,7 @@ public class UserActions implements ATM.Templates.UserActions
     }
 
     //    Helper function for user-withdraw, Calculate notes and give notes to user and reduce amount every time
-    private static double performWithdraw(double useramount, Notes note, ArrayList<String> denominationsList) {
+    private static double performWithdraw(double useramount, Note note, ArrayList<String> denominationsList) {
         long count = (long) (useramount/Integer.parseInt(note.getNote())); // calculate how much note needed for the withdraw amount
         if(Long.parseLong(note.getNote()) <= useramount && note.getCount() > 0) // the withdraw amount should be greater than note and the count of note must be greater than 0
         {
@@ -85,7 +85,7 @@ public class UserActions implements ATM.Templates.UserActions
     {
         Scanner s = new Scanner(System.in);
         ArrayList<String> notesTransaction = new ArrayList<>(); // String array to store the notes that has been supplied to user
-        ArrayList<Notes> notesDuplicate = new ArrayList<>(); // A duplicate notes arraylist to clone and store same notes object in order to unchange the original list everytime
+        ArrayList<Note> noteDuplicate = new ArrayList<>(); // A duplicate notes arraylist to clone and store same notes object in order to unchange the original list everytime
 
         System.out.print("Enter the amount to withdraw :"); // asking amount to withdraw
         long amountToWithdraw = Long.parseLong(s.nextLine());
@@ -94,13 +94,13 @@ public class UserActions implements ATM.Templates.UserActions
             if(amountToWithdraw<=ATMMachine.getBalance()) //  amount to withdraw must be lesser than ATM's balance
             {
                 long finalAmountForCalculations = amountToWithdraw; // storing the original amount in another variable as we are going to change the original amount
-                for(Notes notesInAtm:ATMMachine.getNotesInAtm()) // loop to cloning the objects
+                for(Note notesInAtm:ATMMachine.getNotesInAtm().getNoteObjects()) // loop to cloning the objects
                 {
-                    notesDuplicate.add((Notes)notesInAtm.clone());// clone the object and add in duplicate arraylist of notes
+                    noteDuplicate.add((Note)notesInAtm.clone());// clone the object and add in duplicate arraylist of notes
                 }
                 if(amountToWithdraw!=0) // if amount not zero
                 {
-                    for(Notes notesInDuplicate:notesDuplicate) { // loop the duplicate note objects
+                    for(Note notesInDuplicate: noteDuplicate) { // loop the duplicate note objects
                         String noteType = notesInDuplicate.getNote(); // store the incoming note object's name in a variable
                         switch (noteType) {
                             case "2000", "500", "200", "100": // if any of these four then the below has to execute
@@ -111,7 +111,17 @@ public class UserActions implements ATM.Templates.UserActions
 
                     if(amountToWithdraw == 0)  // if amount comes to zero
                     {
-                        ATMMachine.setNotesInAtm(notesDuplicate);// set duplicate notes list to original
+                        Note noteArr[] = new Note[4];
+                        int length = 0;
+                        for(Note eachNote:noteDuplicate)
+                        {
+                            if(length<noteArr.length)
+                            {
+                                noteArr[length] = eachNote;
+                                length++;
+                            }
+                        }
+                        ATMMachine.getNotesInAtm().setNoteObjects(noteArr);// set duplicate notes list to original
                         currentUser.setBalance(currentUser.getBalance()-finalAmountForCalculations); // set current user's balance
                         for(String notesGiven: notesTransaction) // loop to display supplied notes
                         {
@@ -166,7 +176,7 @@ public class UserActions implements ATM.Templates.UserActions
         if(firstAmountToDeposit==amountToDeposit)// if entered amount and notes entered(calculated as amount) equals
         {
             // get the notes arraylist
-            for(Notes note:ATMMachine.getNotesInAtm()) // loop the notes objects
+            for(Note note:ATMMachine.getNotesInAtm().getNoteObjects()) // loop the notes objects
             {
                 String noteType = note.getNote();// get the object name
                 switch (noteType) {
@@ -186,9 +196,9 @@ public class UserActions implements ATM.Templates.UserActions
 
             }
             currentUser.getAvailableTransactions().add(new Transactions("Deposited",amountToDeposit,currentUser.getUserName())); // adding transaction as objects
-            for(Notes notes:ATMMachine.getNotesInAtm())//loop for printing notes available after deposit
+            for(Note note :ATMMachine.getNotesInAtm().getNoteObjects())//loop for printing notes available after deposit
             {
-                System.out.println("Note: "+ notes.getNote()+" Count : "+notes.getCount());
+                System.out.println("Note: "+ note.getNote()+" Count : "+ note.getCount());
             }
             double currentBalance = currentUser.getBalance() + amountToDeposit;
             double balanceInAtm = ATMMachine.getBalance() + amountToDeposit;

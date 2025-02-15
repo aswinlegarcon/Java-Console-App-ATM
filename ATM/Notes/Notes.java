@@ -1,36 +1,40 @@
 package ATM.Notes;
 
-public abstract class Notes implements Cloneable {
-    private String note;
-    private long count;
+public class Notes<T extends Note>
+{
+    T[] noteObjects;
+    int length = 0;
 
-    protected Notes(String note, long count)
+    public Notes()
     {
-        this.note = note;
-        this.count = count;
+        noteObjects = (T[])new Note[4];
     }
-    public void setNote(String note)
+    public void add(T obj)
     {
-        this.note = note;
-    }
-
-    public String getNote()
-    {
-        return this.note;
-    }
-
-    public void setCount(long count)
-    {
-        this.count = count;
+        if(length<noteObjects.length)
+        {
+            noteObjects[length] = obj;
+            length++;
+        }
     }
 
-    public long getCount()
+    public T get(int index)
     {
-        return this.count;
+        try{
+            return noteObjects[index];
+        }
+        catch (ArrayIndexOutOfBoundsException e)
+        {
+            System.out.println("Error index below 4");
+        }
+       return null;
     }
 
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public T[] getNoteObjects() {
+        return noteObjects;
+    }
+
+    public void setNoteObjects(T[] noteObjects) {
+        this.noteObjects = noteObjects;
     }
 }

@@ -1,8 +1,8 @@
 package ATM.ListOfNotes;
 
-import ATM.Notes.Notes;
+import ATM.Notes.Note;
 
-public class TwoHundred extends Notes {
+public class TwoHundred extends Note {
     public TwoHundred(String note,int count)
     {
         super(note,count);

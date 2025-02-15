@@ -1,9 +1,7 @@
 package ATM;
-import ATM.Notes.Notes;
-import ATM.Templates.UserActions;
-import BookMyShow.BookMyShow;
+import ATM.Notes.Note;
 
-import javax.swing.*;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -126,7 +124,7 @@ public class AdminActions implements ATM.Templates.AdminActions {
         if (firstAmountToDeposit == amountToDeposit)// if entered amount and notes entered(calculated as amount) equals
         {
             // get the notes arraylist
-            for (Notes note : ATMMachine.getNotesInAtm()) // loop the notes objects
+            for (Note note : ATMMachine.getNotesInAtm().getNoteObjects()) // loop the notes objects
             {
                 String noteType = note.getNote();// get the object name
                 switch (noteType) {
@@ -146,9 +144,9 @@ public class AdminActions implements ATM.Templates.AdminActions {
 
             }
             currentAdmin.getAvailableTransactions().add(new Transactions("Deposited", amountToDeposit, currentAdmin.getUserName())); // adding transaction as objects
-            for (Notes notes : ATMMachine.getNotesInAtm())//loop for printing notes available after deposit
+            for (Note note : ATMMachine.getNotesInAtm().getNoteObjects())//loop for printing notes available after deposit
             {
-                System.out.println("Note: " + notes.getNote() + " Count : " + notes.getCount());
+                System.out.println("Note: " + note.getNote() + " Count : " + note.getCount());
             }
             double balanceInAtm = ATMMachine.getBalance() + amountToDeposit;
             ATMMachine.setBalance(balanceInAtm); // set ATM's balance
